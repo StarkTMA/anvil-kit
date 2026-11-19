@@ -39,6 +39,5 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 anvil_kit = [
-    "blocks/wood_set/typescript/*",
     "blocks/wood_set/models/*",
 ]
