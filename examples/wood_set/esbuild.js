@@ -1,7 +1,7 @@
 //Filename: esbuild.js
-//Generated with StarkTMA/Anvil 1.0.1
-//Time: 05-11-2026 17:55:09 +0100
-//Property of Stark_As
+//Generated with StarkTMA/Anvil 1.1.0
+//Time: 19-11-2026 17:19:44 +0100
+//Property of Anvil_Ws
 
 import esbuild from "esbuild";
 import path from "path";

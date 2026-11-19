@@ -3,7 +3,7 @@
 `anvil_kit` holds ready-made content built on top of the [API](https://anvil.starktma.net/api/): call one function and get a complete, working feature such as a full wood set.
 
 !!! warning "Stability"
-    The kit is opinionated and may change between minor versions: names, parameters and the content it generates can all change. Pin your kit version if you depend on a kit's exact output.
+The kit is opinionated and may change between minor versions: names, parameters and the content it generates can all change. Pin your kit version if you depend on a kit's exact output.
 
     The [API](https://anvil.starktma.net/api/) (`anvil.api`) is the stable layer. If you need full control or long-term stability, build on the API directly and use the kit as a reference.
 
@@ -11,8 +11,8 @@
 
 Some kits need packages that a plain `pip install mcanvil-kit` doesn't include. Install them through the matching extra:
 
-| Kit | Extra | Install |
-| --- | --- | --- |
+| Kit                    | Extra           | Install                         |
+| ---------------------- | --------------- | ------------------------------- |
 | `anvil_kit.world.ldtk` | `ldtk` (Amulet) | `pip install mcanvil-kit[ldtk]` |
 
 Importing a kit without its extra raises an `ImportError` naming the command to run.
@@ -43,7 +43,7 @@ A set with saplings needs `tree`, the feature they grow into (a `Feature`, its i
 
 ### World
 
-- **`anvil_kit.world.potionsAPI`**: potion variants (drinkable, splash, lingering) and brewing recipes.
+- **`anvil_kit.world.potions`**: potion variants (drinkable, splash, lingering) and brewing recipes.
 - **`anvil_kit.world.ldtk`**: builds a Minecraft world from an [LDtk](https://ldtk.io) map. Needs the `ldtk` extra.
 
 ### Actors
@@ -64,5 +64,5 @@ palm = (
 palm["planks"].block
 ```
 
-- `tree` is a feature, its identifier, or a function receiving the set once its blocks exist.  Once built, `palm.tree_feature` is the resolved feature.
+- `tree` is a feature, its identifier, or a function receiving the set once its blocks exist. Once built, `palm.tree_feature` is the resolved feature.
 - `leaf_drop(item, chance, count=1)` takes an `Item` or an identifier like `minecraft:apple`.
