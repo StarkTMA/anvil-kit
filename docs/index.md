@@ -43,7 +43,7 @@ A set with saplings needs `tree`, the feature they grow into (a `Feature`, its i
 
 ### World
 
-- **`anvil_kit.world.potions`**: potion variants (drinkable, splash, lingering) and brewing recipes.
+- **`anvil_kit.world.potions`**: potion variants (drinkable, splash, lingering) and brewing recipes. Writes the in-game TypeScript into `scripts/javascript/potions`: call `registerPotions(startup)`; each potion applies the `effectManager` effect named after its `effect_key`.
 - **`anvil_kit.world.ldtk`**: builds a Minecraft world from an [LDtk](https://ldtk.io) map. Needs the `ldtk` extra.
 
 ### Actors
