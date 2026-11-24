@@ -1,0 +1,40 @@
+{
+	"package": {
+		"namespace": "anvil_sb",
+		"project_name": "simple_block",
+		"company": "Anvil",
+		"display_name": "Simple Block",
+		"project_description": "Simple Block Packs",
+		"behavior_description": "Simple Block behavior Pack",
+		"resource_description": "Simple Block Resource Pack",
+		"target": "addon"
+	},
+	"manifest": {
+		"release": "1.0.0",
+		"rp_uuid": ["721c08bf-fb31-4b11-8520-508c4fb39f51"],
+		"bp_uuid": ["4b7d9c6d-6f99-47b7-961e-46d2e6789569"],
+		"pack_uuid": "3a8d802e-6f7f-45cc-9095-f1e711472f39",
+		"data_module_uuid": "ddee3b5a-dae2-41d0-881b-fb28074aa6a7",
+		"resource_module_uuid": "86fe7776-9848-4a8a-bf02-8a869dfdfec3"
+	},
+	"features": {
+		"scriptapi": false,
+		"scriptui": false,
+		"pbr": false,
+		"random_seed": false,
+		"experimental": false
+	},
+	"build": {
+		"preview": false,
+		"entry_point": "scripts/python/main.py",
+		"minify": false,
+		"brarchive": false,
+		"add_stamp": true,
+		"local_export": false
+	},
+	"anvil": {
+		"vanilla_version": "1.26.60",
+		"last_check": "2026-11-24 16:00:34",
+		"anvil_version": "1.1.2"
+	}
+}

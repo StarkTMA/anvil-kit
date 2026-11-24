@@ -1,0 +1,40 @@
+{
+	"package": {
+		"namespace": "anvil_hi",
+		"project_name": "hello_item",
+		"company": "Anvil",
+		"display_name": "Hello Item",
+		"project_description": "Hello Item Packs",
+		"behavior_description": "Hello Item behavior Pack",
+		"resource_description": "Hello Item Resource Pack",
+		"target": "addon"
+	},
+	"manifest": {
+		"release": "1.0.0",
+		"rp_uuid": ["89a74f29-cea1-4c54-b2c3-12c273780988"],
+		"bp_uuid": ["b5a80236-f1f5-46b9-a863-61662d2f73ff"],
+		"pack_uuid": "7c38a42f-9826-48d4-837a-8b6770f5ef99",
+		"data_module_uuid": "ad41d231-2087-4bd4-bf2f-d04ce33a583b",
+		"resource_module_uuid": "c0dc86c8-d37a-4d8c-ae0b-a72e9fbb17ed"
+	},
+	"features": {
+		"scriptapi": false,
+		"scriptui": false,
+		"pbr": false,
+		"random_seed": false,
+		"experimental": false
+	},
+	"build": {
+		"preview": false,
+		"entry_point": "scripts/python/main.py",
+		"minify": false,
+		"brarchive": false,
+		"add_stamp": true,
+		"local_export": false
+	},
+	"anvil": {
+		"vanilla_version": "1.26.60",
+		"last_check": "2026-11-24 15:54:47",
+		"anvil_version": "1.1.2"
+	}
+}

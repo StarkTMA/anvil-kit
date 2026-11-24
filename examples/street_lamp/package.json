@@ -1,0 +1,19 @@
+{
+	"name": "street_lamp",
+	"version": "1.0.0",
+	"description": "Street Lamp Packs",
+	"type": "module",
+	"scripts": {
+		"build": "node esbuild.js"
+	},
+	"author": "Anvil",
+	"license": "MIT",
+	"main": "esbuild.js",
+	"dependencies": {
+		"@minecraft/server": "^2.11.0",
+		"esbuild": "^0.28.2"
+	},
+	"allowScripts": {
+		"esbuild@0.28.2": true
+	}
+}
