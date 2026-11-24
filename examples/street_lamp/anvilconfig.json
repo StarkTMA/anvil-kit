@@ -1,0 +1,42 @@
+{
+	"package": {
+		"namespace": "anvil_sl",
+		"project_name": "street_lamp",
+		"company": "Anvil",
+		"display_name": "Street Lamp",
+		"project_description": "Street Lamp Packs",
+		"behavior_description": "Street Lamp behavior Pack",
+		"resource_description": "Street Lamp Resource Pack",
+		"target": "addon"
+	},
+	"manifest": {
+		"release": "1.0.0",
+		"rp_uuid": ["2e7d0f54-30c4-46ba-81e6-143fc8825a11"],
+		"bp_uuid": ["41345c0c-d396-458c-8964-e144b78ea1c4"],
+		"pack_uuid": "abc55888-6d5c-491f-8d55-b73db0c384d2",
+		"data_module_uuid": "795a555e-08ec-43ae-a059-a9e0868c508a",
+		"resource_module_uuid": "4702d374-48ac-43ed-87ae-5a3d49b2a3b0",
+		"script_module_uuid": "7208bfe7-8516-4b5c-9f98-25747d4dff5f"
+	},
+	"features": {
+		"scriptapi": true,
+		"scriptui": false,
+		"pbr": false,
+		"random_seed": false,
+		"experimental": false
+	},
+	"build": {
+		"preview": false,
+		"entry_point": "scripts/python/main.py",
+		"minify": false,
+		"brarchive": false,
+		"add_stamp": true,
+		"local_export": false,
+		"js_bundle_script": "node esbuild.js"
+	},
+	"anvil": {
+		"vanilla_version": "1.26.60",
+		"last_check": "2026-11-24 16:02:51",
+		"anvil_version": "1.1.2"
+	}
+}

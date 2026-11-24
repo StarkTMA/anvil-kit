@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Three beginner examples lead up to the wood set in `examples/`: `hello_item` (one item with a texture and a recipe), `simple_block` (a stool modelled in Blockbench) and `street_lamp` (a two-part lamp with Blockbench collections, a block state, permutations, a script, voxel shape culling and world generation).
+- The README lists every example in reading order under Examples.
+- The wood set example's item textures no longer carry embedded editor metadata.
+
 ## 0.1.2
 
 - `Brewing(result, reagent, source=None)` takes the variant objects instead of `from_index`/`to_index`; leave `source` out to brew from an awkward potion. Recipes name themselves `brew_<effect_key>_<n>`, so two recipes for the same result no longer clash. Potion variants are keyword-only (`Drinkable(duration=240)`).
