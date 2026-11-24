@@ -14,7 +14,10 @@ from anvil.api.actors.entity import Entity
 from anvil.api.logic.molang import Query
 from anvil.api.pbr.texture_set import TextureComponents
 
-from .config import PotionConfig
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .potion import Potion
 
 
 def create_projectile() -> Entity:
@@ -29,6 +32,11 @@ def create_projectile() -> Entity:
     )
     entity.server.description.add_int_property(
         "effect_id", (0, 2**31 - 1), default=0, client_sync=True
+    )
+    entity.server.description.add_float_property("splash_range", (0, 256), default=4)
+    entity.server.description.add_float_property("lingering_radius", (0, 256), default=3)
+    entity.server.description.add_int_property(
+        "lingering_lifetime", (1, 2**31 - 1), default=600
     )
 
     entity.client.description.animation("potion_model", "face_camera", True)
@@ -60,16 +68,16 @@ def create_projectile() -> Entity:
 
 
 def add_render_controller(
-    projectile: Entity, config: PotionConfig, textures: list[str]
+    projectile: Entity, potion: "Potion", textures: list[str]
 ) -> None:
-    """Draw `config`'s textures on the projectile while it carries `config.effect_id`."""
+    """Draw `potion`'s textures on the projectile while it carries `potion.effect_id`."""
     for texture in textures:
         projectile.client.description.add_texture(
             "potion_model", TextureComponents(color=texture)
         )
 
     rc = projectile.client.description.render_controller(
-        config.effect_key, Query.Property("effect_id") == config.effect_id
+        potion.key, Query.Property("effect_id") == potion.effect_id
     )
     rc.set_geometry("potion_model")
     rc.texture_array("potions", textures)
