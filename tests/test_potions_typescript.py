@@ -1,11 +1,13 @@
 import re
 
 import pytest
+from anvil.api.blocks.components import BlockCustomComponent
+from anvil.lib.jsonmodel import json_field
 
-from anvil_kit.world.potions import Potion
+from anvil_kit.world.potions import Potion, PotionEffectParameters
 from anvil_kit.world.potions import potion as potion_module
 from anvil_kit.world.potions.scaffold import OUTPUT_DIRECTORY, SCRIPTS, potion_name, write_typescript
-from anvil_kit.world.potions.variants import Drinkable, Lingering, PotionVariant, Splash
+from anvil_kit.world.potions.variants import Drinkable, Lingering, PotionEffect, PotionVariant, Splash
 
 
 def _potion(key: str, effect_id: int, **values) -> Potion:
@@ -43,7 +45,6 @@ def test_runtime_is_split_into_modules(tmp_path, monkeypatch):
     index = _read(tmp_path, "index.ts")
     for name in ("drinkable", "lingering", "splash"):
         assert f'from "./{name}";' in index
-    assert "export type { Potion };" in index
     assert "registerDrinkable(init);" in index
     assert "subscribeSplash(POTIONS)" in index
     assert "subscribeLingering(POTIONS)" in index
@@ -55,6 +56,7 @@ def test_runtime_is_split_into_modules(tmp_path, monkeypatch):
     splash = _read(tmp_path, "splash.ts")
     assert "thrownPotion(projectile, potions, SPLASH)" in splash
     assert ":splash_range`" in splash
+    assert "export function splash(\n\tdimension: Dimension,\n\tlocation: Vector3," in splash
     lingering = _read(tmp_path, "lingering.ts")
     assert "thrownPotion(projectile, potions, LINGERING)" in lingering
     assert ":lingering_radius`" in lingering
@@ -184,13 +186,22 @@ def test_queue_numbers_potions_and_brews_their_items(tmp_path, monkeypatch):
     assert "\t0: stasisPotion,\n\t1: recallPotion,\n" in _read(tmp_path, "index.ts")
 
 
-def test_drinkables_share_one_effect_component(monkeypatch):
-    monkeypatch.setattr(Potion, "_effect_component", None)
-    component = Potion._get_effect_component()
-    assert Potion._get_effect_component() is component
-    assert component.identifier == "test:potion_effect"
-    params = component(effect="stasis", amplifier=1, duration=240).__json__()
-    assert params == {"test:potion_effect": {"effect": "stasis", "amplifier": 1, "duration": 240}}
+def test_drinkables_share_one_effect_component():
+    component = PotionEffect(**Drinkable(amplifier=1, duration=240).effect(_potion("stasis", 0)))
+    assert component.__json__() == {
+        "test:potion_effect": {"id": "stasis", "amplifier": 1, "duration": 4800}
+    }
+
+
+def test_effect_parameters_mix_into_other_components():
+    class TrapPotionEffect(PotionEffectParameters, BlockCustomComponent):
+        identifier = "trap_potion_effect"
+        trap_range: float = json_field()
+
+    effect = Drinkable(duration=20).effect(_potion("burn", 0))
+    assert TrapPotionEffect(**effect, trap_range=3).__json__() == {
+        "test:trap_potion_effect": {"id": "burn", "amplifier": 0, "duration": 400, "trap_range": 3}
+    }
 
 
 def test_thrown_variants_set_their_projectile_type():
@@ -212,14 +223,14 @@ def test_thrown_variants_set_their_projectile_type():
     Lingering(duration=20, radius=4, lifetime=10)._setup_projectile(stasis, 2, FakeProjectile)
 
     assert events["stasis_splash_1"] == {
-        "duration": 135,
+        "duration": 2700,
         "amplifier": 1,
         "type": 1,
         "effect_id": 3,
         "splash_range": 2.5,
     }
     assert events["stasis_lingering_2"] == {
-        "duration": 20,
+        "duration": 400,
         "amplifier": 0,
         "type": 2,
         "effect_id": 3,

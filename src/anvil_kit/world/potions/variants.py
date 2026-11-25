@@ -2,10 +2,11 @@
 `Potion.drinkable()`, `Potion.splash()` and `Potion.lingering()`."""
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 
 from anvil.api.actors.entity import Entity
 from anvil.api.items.components import (
+    ItemCustomComponent,
     ItemDisplayName,
     ItemFood,
     ItemIcon,
@@ -18,11 +19,36 @@ from anvil.api.items.components import (
 )
 from anvil.api.items.items import Item
 from anvil.api.pbr.texture_set import TextureComponents
-from anvil.api.vanilla.items import MinecraftItemTypes
+from anvil.api.vanilla import MinecraftItemTypes
+from anvil.lib.jsonmodel import InRange, json_field
+from anvil.lib.jsonmodel.component import JsonCustomComponent
 from anvil.lib.jsonmodel.enums import ItemCategory
 
 if TYPE_CHECKING:
     from .potion import Potion
+
+class PotionEffectParameters(JsonCustomComponent, abstract=True):
+    """The effect a custom component applies: `id`, `amplifier` and `duration` in ticks, the
+    same shape as `EffectObject` in TypeScript. Mix it into an item or block custom component
+    and fill it from `PotionVariant.effect()`:
+
+        class TrapPotionEffect(PotionEffectParameters, BlockCustomComponent):
+            identifier = "trap_potion_effect"
+            trap_range: float = json_field()
+
+        TrapPotionEffect(**variant.effect(potion), trap_range=3)
+    """
+
+    id: str = json_field()
+    amplifier: Annotated[int, InRange(0, 255)] = json_field()
+    duration: int = json_field()
+
+
+class PotionEffect(PotionEffectParameters, ItemCustomComponent):
+    """The item component every drinkable shares, applied by drinkable.ts."""
+
+    identifier = "potion_effect"
+
 
 _NUMERALS = ("I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X")
 
@@ -40,6 +66,15 @@ class PotionVariant:
     """Names the item and its texture: `<key>_<potion_type>_potion`."""
     potion_display = "Potion"
 
+    def effect(self, potion: "Potion") -> dict[str, str | int]:
+        """This variant's effect, ready for a `PotionEffectParameters` component:
+        `{"id": "burn", "amplifier": 0, "duration": 400}`, the duration in ticks."""
+        return {
+            "id": potion.key,
+            "amplifier": self.amplifier,
+            "duration": round(self.duration * 20),
+        }
+
     @property
     def _numeral(self) -> str:
         if 0 <= self.amplifier < len(_NUMERALS):
@@ -47,7 +82,7 @@ class PotionVariant:
         return str(self.amplifier + 1)
 
     def _create_item(
-        self, potion: "Potion", index: int, effect_component: type, projectile: Entity
+        self, potion: "Potion", index: int, projectile: Entity
     ) -> Item:
         minutes, seconds = divmod(int(self.duration), 60)
         title = f"{self.potion_display} of {potion.title}"
@@ -60,7 +95,9 @@ class PotionVariant:
         item.server.components.add(
             ItemDisplayName(value=f"{title}\\n{subtitle}"),
             ItemIcon(
-                textures=TextureComponents(color=f"{potion.key}_{self.potion_type}_potion"),
+                textures=TextureComponents(
+                    color=f"{potion.key}_{self.potion_type}_potion"
+                ),
                 blockbench="potion_model",
             ),
             ItemMaxStackSize(value=1),
@@ -69,7 +106,9 @@ class PotionVariant:
         item.queue()
         return item
 
-    def _setup_projectile(self, potion: "Potion", index: int, projectile: Entity) -> None:
+    def _setup_projectile(
+        self, potion: "Potion", index: int, projectile: Entity
+    ) -> None:
         pass
 
 
@@ -81,13 +120,11 @@ class Drinkable(PotionVariant):
     """Seconds it takes to drink."""
 
     def _create_item(
-        self, potion: "Potion", index: int, effect_component: type, projectile: Entity
+        self, potion: "Potion", index: int, projectile: Entity
     ) -> Item:
-        item = super()._create_item(potion, index, effect_component, projectile)
+        item = super()._create_item(potion, index, projectile)
         item.server.components.add(
-            effect_component(
-                effect=potion.key, amplifier=self.amplifier, duration=self.duration
-            ),
+            PotionEffect(**self.effect(potion)),
             ItemUseModifiers(use_duration=self.use_duration),
             ItemFood(
                 can_always_eat=True,
@@ -111,9 +148,9 @@ class _Thrown(PotionVariant):
         return f"{potion.key}_{self.potion_type}_{index}"
 
     def _create_item(
-        self, potion: "Potion", index: int, effect_component: type, projectile: Entity
+        self, potion: "Potion", index: int, projectile: Entity
     ) -> Item:
-        item = super()._create_item(potion, index, effect_component, projectile)
+        item = super()._create_item(potion, index, projectile)
         item.server.components.add(
             ItemThrowable(),
             ItemProjectile(
@@ -123,10 +160,12 @@ class _Thrown(PotionVariant):
         )
         return item
 
-    def _setup_projectile(self, potion: "Potion", index: int, projectile: Entity) -> None:
+    def _setup_projectile(
+        self, potion: "Potion", index: int, projectile: Entity
+    ) -> None:
         event = projectile.server.event(self._event_name(potion, index))
         properties = {
-            "duration": int(self.duration),
+            "duration": round(self.duration * 20),
             "amplifier": self.amplifier,
             "type": self._projectile_type,
             "effect_id": potion.effect_id,
@@ -168,4 +207,7 @@ class Lingering(_Thrown):
     _projectile_type = 2
 
     def _projectile_properties(self) -> dict[str, float]:
-        return {"lingering_radius": self.radius, "lingering_lifetime": round(self.lifetime * 20)}
+        return {
+            "lingering_radius": self.radius,
+            "lingering_lifetime": round(self.lifetime * 20),
+        }

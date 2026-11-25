@@ -2,5 +2,6 @@
 TypeScript that applies them in game."""
 
 from .potion import Potion
+from .variants import PotionEffectParameters, PotionVariant
 
-__all__ = ["Potion"]
+__all__ = ["Potion", "PotionEffectParameters", "PotionVariant"]

@@ -2,15 +2,11 @@
 
 import re
 from dataclasses import dataclass
-from typing import Annotated
 
 from anvil.api.actors.entity import Entity
-from anvil.api.core.core import CONFIG
-from anvil.api.items.components import ItemCustomComponent
 from anvil.api.items.crafting import PotionMixingRecipe
 from anvil.api.items.items import Item
-from anvil.api.vanilla.items import MinecraftItemTypes
-from anvil.lib.jsonmodel import InRange, json_field
+from anvil.api.vanilla import MinecraftItemTypes
 
 from .projectile import add_render_controller, create_projectile
 from .scaffold import write_typescript
@@ -42,7 +38,6 @@ class Potion:
 
     _queued: list["Potion"] = []
     _projectile: Entity | None = None
-    _effect_component: type | None = None
 
     def __init__(
         self,
@@ -137,12 +132,11 @@ class Potion:
 
         self.effect_id = len(Potion._queued)
         projectile = Potion._get_projectile()
-        effect_component = Potion._get_effect_component()
 
         items = []
         textures = []
         for index, variant in enumerate(self.variants):
-            items.append(variant._create_item(self, index, effect_component, projectile))
+            items.append(variant._create_item(self, index, projectile))
             variant._setup_projectile(self, index, projectile)
             texture = f"{self.key}_{variant.potion_type}_potion"
             if texture not in textures:
@@ -183,19 +177,3 @@ class Potion:
         if Potion._projectile is None:
             Potion._projectile = create_projectile()
         return Potion._projectile
-
-    @classmethod
-    def _get_effect_component(cls) -> type:
-        """The `<namespace>:potion_effect` item component every drinkable shares. Its `effect`
-        names the effect drinkable.ts applies."""
-        if Potion._effect_component is None:
-
-            class PotionEffect(ItemCustomComponent):
-                identifier = f"{CONFIG.NAMESPACE}:potion_effect"
-
-                effect: str = json_field()
-                amplifier: Annotated[float, InRange(0.0, 255.0)] = json_field()
-                duration: float = json_field()
-
-            Potion._effect_component = PotionEffect
-        return Potion._effect_component

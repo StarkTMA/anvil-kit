@@ -92,15 +92,14 @@ _INDEX_TS_HEAD = """\
 import { StartupEvent, world } from "@minecraft/server";
 import { registerDrinkable } from "./drinkable";
 import { subscribeLingering } from "./lingering";
-import { Potion } from "./potion";
+import { addPotions, Potion } from "./potion";
 import { subscribeSplash } from "./splash";
-
-export type { Potion };
 
 """
 
 _INDEX_TS_TAIL = """
 export function registerPotions(init: StartupEvent): void {
+\taddPotions(POTIONS);
 \tregisterDrinkable(init);
 \tworld.afterEvents.worldLoad.subscribe(() => {
 \t\tsubscribeSplash(POTIONS);
@@ -125,6 +124,22 @@ export interface Potion extends EffectObject {
 	color: string;
 }
 
+const registered = new Map<string, Potion>();
+
+export function addPotions(potions: Record<number, Potion>): void {
+	for (const potion of Object.values(potions))
+		registered.set(potion.id, potion);
+}
+
+export function getPotion(effect: EffectObject): Potion {
+	return {
+		id: effect.id,
+		amplifier: effect.amplifier,
+		duration: effect.duration,
+		color: registered.get(effect.id)?.color ?? "#ffffff",
+	};
+}
+
 export function thrownPotion(
 	projectile: Entity,
 	potions: Record<number, Potion>,
@@ -141,11 +156,11 @@ export function thrownPotion(
 	const potion =
 		potions[projectile.getProperty(`${namespace}:effect_id`) as number];
 	if (!potion) return;
-	return {
-		...potion,
+	return getPotion({
+		id: potion.id,
 		amplifier: projectile.getProperty(`${namespace}:amplifier`) as number,
-		duration: (projectile.getProperty(`${namespace}:duration`) as number) * 20,
-	};
+		duration: projectile.getProperty(`${namespace}:duration`) as number,
+	});
 }
 
 export function spawnParticle(
@@ -171,20 +186,17 @@ import {
 	StartupEvent,
 } from "@minecraft/server";
 import { getNamespace } from "@starktma/minecraft-utils";
-import { effectManager } from "@starktma/minecraft-utils/minecraft";
-
-interface DrinkableParameters {
-	effect: string;
-	amplifier: number;
-	duration: number;
-}
+import {
+	EffectObject,
+	effectManager,
+} from "@starktma/minecraft-utils/minecraft";
 
 function onConsume(
 	event: ItemComponentConsumeEvent,
 	{ params }: CustomComponentParameters,
 ): void {
-	const { effect, amplifier, duration } = params as DrinkableParameters;
-	effectManager.addEffect(event.source, effect, amplifier, duration * 20);
+	const { id, amplifier, duration } = params as EffectObject;
+	effectManager.addEffect(event.source, id, amplifier, duration);
 }
 
 const drinkableComponent: ItemCustomComponent = { onConsume };
