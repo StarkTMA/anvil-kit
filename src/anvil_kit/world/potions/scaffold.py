@@ -199,7 +199,7 @@ export function registerDrinkable(init: StartupEvent): void {
 
 
 _SPLASH_TS = """\
-import { Entity, world } from "@minecraft/server";
+import { Dimension, Entity, Vector3, world } from "@minecraft/server";
 import { getNamespace } from "@starktma/minecraft-utils";
 import { effectManager } from "@starktma/minecraft-utils/minecraft";
 import { Potion, spawnParticle, thrownPotion } from "./potion";
@@ -208,22 +208,35 @@ const SPLASH = 1;
 
 export function subscribeSplash(potions: Record<number, Potion>): void {
 	world.afterEvents.projectileHitBlock.subscribe((event) =>
-		splash(event.projectile, potions),
+		onSplashHit(event.projectile, potions),
 	);
 	world.afterEvents.projectileHitEntity.subscribe((event) =>
-		splash(event.projectile, potions),
+		onSplashHit(event.projectile, potions),
 	);
 }
 
-function splash(projectile: Entity, potions: Record<number, Potion>): void {
+function onSplashHit(
+	projectile: Entity,
+	potions: Record<number, Potion>,
+): void {
 	const potion = thrownPotion(projectile, potions, SPLASH);
 	if (!potion) return;
 
 	const { dimension } = projectile;
+	const location = { ...projectile.location, y: projectile.location.y + 0.1 };
 	const range = projectile.getProperty(
 		`${getNamespace()}:splash_range`,
 	) as number;
-	const location = { ...projectile.location, y: projectile.location.y + 0.1 };
+	projectile.remove();
+	splash(dimension, location, potion, range);
+}
+
+export function splash(
+	dimension: Dimension,
+	location: Vector3,
+	potion: Potion,
+	range: number,
+): void {
 	spawnParticle(
 		dimension,
 		"minecraft:splash_spell_emitter",
@@ -238,15 +251,13 @@ function splash(projectile: Entity, potions: Record<number, Potion>): void {
 		location,
 		maxDistance: range,
 	})) {
-		if (entity.id !== projectile.id)
-			effectManager.addEffect(
-				entity,
-				potion.id,
-				potion.amplifier,
-				potion.duration,
-			);
+		effectManager.addEffect(
+			entity,
+			potion.id,
+			potion.amplifier,
+			potion.duration,
+		);
 	}
-	projectile.remove();
 }
 """
 
