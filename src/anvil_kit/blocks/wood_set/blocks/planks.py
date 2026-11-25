@@ -28,8 +28,7 @@ from anvil.api.items.components import (
 )
 from anvil.api.items.crafting import ShapedCraftingRecipe, ShapelessRecipe
 from anvil.api.logic.molang import Query
-from anvil.api.vanilla.blocks import MinecraftBlockTags
-from anvil.api.vanilla.items import MinecraftItemTags
+from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
     BlockMaterial,

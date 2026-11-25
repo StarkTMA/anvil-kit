@@ -9,7 +9,7 @@ from anvil.api.blocks.components import (
     InstanceVariant,
 )
 from anvil.api.items.crafting.shaped import ShapedCraftingRecipe
-from anvil.api.vanilla.items import MinecraftItemTypes
+from anvil.api.vanilla import MinecraftItemTypes
 from anvil.lib.jsonmodel.enums import BlockSoundGroup, ItemCategory
 
 MODEL = "stool"

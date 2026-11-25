@@ -31,8 +31,7 @@ from anvil.api.items.components import (
     ItemTags,
 )
 from anvil.api.items.items import Item
-from anvil.api.vanilla.blocks import MinecraftBlockTags
-from anvil.api.vanilla.items import MinecraftItemTags
+from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags
 from anvil.api.world.loot_tables import LootTable
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,

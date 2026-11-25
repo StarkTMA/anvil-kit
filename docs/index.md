@@ -72,7 +72,7 @@ palm["planks"].block
 A potion is a `Potion`. Add its variants and brewing recipes, then `queue()` it, which returns one item per variant. Every argument is keyword-only:
 
 ```python
-from anvil.api.vanilla.items import MinecraftItemTypes
+from anvil.api.vanilla import MinecraftItemTypes
 from anvil_kit.world.potions import Potion
 
 recall = Potion(

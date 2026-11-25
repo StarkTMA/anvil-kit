@@ -35,8 +35,7 @@ from anvil.api.items.components import (
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
 from anvil.api.pbr.texture_set import TextureComponents
-from anvil.api.vanilla.blocks import MinecraftBlockTags
-from anvil.api.vanilla.items import MinecraftItemTags, MinecraftItemTypes
+from anvil.api.vanilla import MinecraftItemTypes, MinecraftBlockTags, MinecraftItemTags
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
     BlockLiquidDetectionTouching,

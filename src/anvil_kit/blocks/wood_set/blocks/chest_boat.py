@@ -28,7 +28,7 @@ from anvil.api.items.crafting import ShapelessRecipe
 from anvil.api.items.items import Item
 from anvil.api.logic.molang import Math, Molang, Query, Variable
 from anvil.api.pbr.texture_set import TextureComponents
-from anvil.api.vanilla.items import MinecraftItemTypes
+from anvil.api.vanilla import MinecraftItemTypes
 from anvil.lib.jsonmodel.enums import (
     ContainerType,
     DamageSensor,

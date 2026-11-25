@@ -2,7 +2,7 @@ from anvil.api.items.components import ItemDisplayName, ItemIcon, ItemMaxStackSi
 from anvil.api.items.crafting.shaped import ShapedCraftingRecipe
 from anvil.api.items.items import Item
 from anvil.api.pbr.texture_set import TextureComponents
-from anvil.api.vanilla.items import MinecraftItemTypes
+from anvil.api.vanilla import MinecraftItemTypes
 from anvil.lib.jsonmodel.enums import ItemCategory
 
 

@@ -18,8 +18,7 @@ from anvil.api.items.components import ItemBlockPlacer, ItemIcon
 from anvil.api.items.crafting.shaped import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
 from anvil.api.pbr.texture_set import TextureComponents
-from anvil.api.vanilla.biomes import MinecraftBiomeTags
-from anvil.api.vanilla.items import MinecraftItemTypes
+from anvil.api.vanilla import MinecraftBiomeTags, MinecraftItemTypes
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
     BlockSoundGroup,
