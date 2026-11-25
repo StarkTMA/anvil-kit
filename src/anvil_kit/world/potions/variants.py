@@ -27,6 +27,7 @@ from anvil.lib.jsonmodel.enums import ItemCategory
 if TYPE_CHECKING:
     from .potion import Potion
 
+
 class PotionEffectParameters(JsonCustomComponent, abstract=True):
     """The effect a custom component applies: `id`, `amplifier` and `duration` in ticks, the
     same shape as `EffectObject` in TypeScript. Mix it into an item or block custom component
@@ -81,9 +82,7 @@ class PotionVariant:
             return _NUMERALS[self.amplifier]
         return str(self.amplifier + 1)
 
-    def _create_item(
-        self, potion: "Potion", index: int, projectile: Entity
-    ) -> Item:
+    def _create_item(self, potion: "Potion", index: int, projectile: Entity) -> Item:
         minutes, seconds = divmod(int(self.duration), 60)
         title = f"{self.potion_display} of {potion.title}"
         subtitle = f"§9{potion.title} {self._numeral} ({minutes:02d}:{seconds:02d})"
@@ -119,9 +118,7 @@ class Drinkable(PotionVariant):
     use_duration: float = 1.5
     """Seconds it takes to drink."""
 
-    def _create_item(
-        self, potion: "Potion", index: int, projectile: Entity
-    ) -> Item:
+    def _create_item(self, potion: "Potion", index: int, projectile: Entity) -> Item:
         item = super()._create_item(potion, index, projectile)
         item.server.components.add(
             PotionEffect(**self.effect(potion)),
@@ -147,9 +144,7 @@ class _Thrown(PotionVariant):
     def _event_name(self, potion: "Potion", index: int) -> str:
         return f"{potion.key}_{self.potion_type}_{index}"
 
-    def _create_item(
-        self, potion: "Potion", index: int, projectile: Entity
-    ) -> Item:
+    def _create_item(self, potion: "Potion", index: int, projectile: Entity) -> Item:
         item = super()._create_item(potion, index, projectile)
         item.server.components.add(
             ItemThrowable(),

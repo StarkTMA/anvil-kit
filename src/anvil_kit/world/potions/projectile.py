@@ -1,5 +1,7 @@
 """The one projectile entity shared by every thrown potion."""
 
+from typing import TYPE_CHECKING
+
 from anvil.api.actors.components import (
     BandwidthValues,
     EntityBodyRotationBlocked,
@@ -13,8 +15,6 @@ from anvil.api.actors.components import (
 from anvil.api.actors.entity import Entity
 from anvil.api.logic.molang import Query
 from anvil.api.pbr.texture_set import TextureComponents
-
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .potion import Potion
@@ -34,7 +34,9 @@ def create_projectile() -> Entity:
         "effect_id", (0, 2**31 - 1), default=0, client_sync=True
     )
     entity.server.description.add_float_property("splash_range", (0, 256), default=4)
-    entity.server.description.add_float_property("lingering_radius", (0, 256), default=3)
+    entity.server.description.add_float_property(
+        "lingering_radius", (0, 256), default=3
+    )
     entity.server.description.add_int_property(
         "lingering_lifetime", (1, 2**31 - 1), default=600
     )

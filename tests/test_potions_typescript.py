@@ -6,8 +6,19 @@ from anvil.lib.jsonmodel import json_field
 
 from anvil_kit.world.potions import Potion, PotionEffectParameters
 from anvil_kit.world.potions import potion as potion_module
-from anvil_kit.world.potions.scaffold import OUTPUT_DIRECTORY, SCRIPTS, potion_name, write_typescript
-from anvil_kit.world.potions.variants import Drinkable, Lingering, PotionEffect, PotionVariant, Splash
+from anvil_kit.world.potions.scaffold import (
+    OUTPUT_DIRECTORY,
+    SCRIPTS,
+    potion_name,
+    write_typescript,
+)
+from anvil_kit.world.potions.variants import (
+    Drinkable,
+    Lingering,
+    PotionEffect,
+    PotionVariant,
+    Splash,
+)
 
 
 def _potion(key: str, effect_id: int, **values) -> Potion:
@@ -56,7 +67,10 @@ def test_runtime_is_split_into_modules(tmp_path, monkeypatch):
     splash = _read(tmp_path, "splash.ts")
     assert "thrownPotion(projectile, potions, SPLASH)" in splash
     assert ":splash_range`" in splash
-    assert "export function splash(\n\tdimension: Dimension,\n\tlocation: Vector3," in splash
+    assert (
+        "export function splash(\n\tdimension: Dimension,\n\tlocation: Vector3,"
+        in splash
+    )
     lingering = _read(tmp_path, "lingering.ts")
     assert "thrownPotion(projectile, potions, LINGERING)" in lingering
     assert ":lingering_radius`" in lingering
@@ -71,7 +85,9 @@ def test_every_import_points_at_a_written_module(tmp_path, monkeypatch):
 
     for path in (tmp_path / OUTPUT_DIRECTORY).iterdir():
         for module in re.findall(r'from "\./(\w+)";', path.read_text(encoding="utf-8")):
-            assert (path.parent / f"{module}.ts").is_file(), f"{path.name} imports ./{module}"
+            assert (
+                path.parent / f"{module}.ts"
+            ).is_file(), f"{path.name} imports ./{module}"
 
 
 def test_rewriting_the_same_index_leaves_the_file_alone(tmp_path, monkeypatch):
@@ -131,7 +147,9 @@ def test_brewing_needs_the_potions_own_variants():
     with pytest.raises(ValueError, match="brewing result isn't one of its variants"):
         magnet.brew(result=splash, reagent="minecraft:redstone")
     with pytest.raises(ValueError, match="brewing source isn't one of its variants"):
-        stasis.brew(result=splash, reagent="minecraft:redstone", source=magnet.drinkable())
+        stasis.brew(
+            result=splash, reagent="minecraft:redstone", source=magnet.drinkable()
+        )
 
 
 def test_queue_needs_variants_and_a_new_key(monkeypatch):
@@ -166,7 +184,9 @@ def test_queue_numbers_potions_and_brews_their_items(tmp_path, monkeypatch):
     monkeypatch.setattr(potion_module, "PotionMixingRecipe", FakeRecipe)
     monkeypatch.setattr(potion_module, "add_render_controller", lambda *args: None)
     monkeypatch.setattr(
-        Drinkable, "_create_item", lambda self, potion, index, *rest: f"{potion.key}_{index}"
+        Drinkable,
+        "_create_item",
+        lambda self, potion, index, *rest: f"{potion.key}_{index}",
     )
     monkeypatch.setattr(PotionVariant, "_setup_projectile", lambda *args: None)
 
@@ -187,7 +207,9 @@ def test_queue_numbers_potions_and_brews_their_items(tmp_path, monkeypatch):
 
 
 def test_drinkables_share_one_effect_component():
-    component = PotionEffect(**Drinkable(amplifier=1, duration=240).effect(_potion("stasis", 0)))
+    component = PotionEffect(
+        **Drinkable(amplifier=1, duration=240).effect(_potion("stasis", 0))
+    )
     assert component.__json__() == {
         "test:potion_effect": {"id": "stasis", "amplifier": 1, "duration": 4800}
     }
@@ -200,7 +222,12 @@ def test_effect_parameters_mix_into_other_components():
 
     effect = Drinkable(duration=20).effect(_potion("burn", 0))
     assert TrapPotionEffect(**effect, trap_range=3).__json__() == {
-        "test:trap_potion_effect": {"id": "burn", "amplifier": 0, "duration": 400, "trap_range": 3}
+        "test:trap_potion_effect": {
+            "id": "burn",
+            "amplifier": 0,
+            "duration": 400,
+            "trap_range": 3,
+        }
     }
 
 
@@ -220,7 +247,9 @@ def test_thrown_variants_set_their_projectile_type():
 
     stasis = _potion("stasis", 3)
     Splash(amplifier=1, range=2.5)._setup_projectile(stasis, 1, FakeProjectile)
-    Lingering(duration=20, radius=4, lifetime=10)._setup_projectile(stasis, 2, FakeProjectile)
+    Lingering(duration=20, radius=4, lifetime=10)._setup_projectile(
+        stasis, 2, FakeProjectile
+    )
 
     assert events["stasis_splash_1"] == {
         "duration": 2700,

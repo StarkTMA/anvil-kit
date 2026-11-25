@@ -60,7 +60,9 @@ class Potion:
                 "starting with a letter, like 'night_vision'."
             )
         if not isinstance(color, str) or not _HEX_COLOR.fullmatch(color):
-            raise ValueError(f"{name}: color must be a hex colour like '#FF8000', got {color!r}.")
+            raise ValueError(
+                f"{name}: color must be a hex colour like '#FF8000', got {color!r}."
+            )
 
         self.key = key
         self.title = title
@@ -75,7 +77,9 @@ class Potion:
     ) -> Drinkable:
         """Add a potion you drink. `amplifier` counts from 0 like the game (1 is "II"),
         `duration` and `use_duration` are seconds."""
-        return self._add(Drinkable(amplifier=amplifier, duration=duration, use_duration=use_duration))
+        return self._add(
+            Drinkable(amplifier=amplifier, duration=duration, use_duration=use_duration)
+        )
 
     def splash(
         self, *, amplifier: int = 0, duration: float = 135, range: float = 4
@@ -98,7 +102,9 @@ class Potion:
         lasts if no entity shrinks it."""
         self._check_positive("lingering", radius=radius, lifetime=lifetime)
         return self._add(
-            Lingering(amplifier=amplifier, duration=duration, radius=radius, lifetime=lifetime)
+            Lingering(
+                amplifier=amplifier, duration=duration, radius=radius, lifetime=lifetime
+            )
         )
 
     def brew(
