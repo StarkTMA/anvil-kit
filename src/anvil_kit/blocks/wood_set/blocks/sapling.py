@@ -17,14 +17,11 @@ from anvil.api.blocks.components import (
     BlockPlacementFilter,
     BlockRedstoneConductivity,
     BlockSelectionBox,
-    InstanceSpec,
-    InstanceVariant,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.features import Feature
 from anvil.api.items.components import ItemBlockPlacer, ItemDisplayName, ItemIcon
-from anvil.api.pbr.texture_set import TextureComponents
+from anvil.api.textures import BlockTexture
 from anvil.api.world.loot_tables import LootTable
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -77,13 +74,10 @@ def create(
         BlockDisplayName(value=display_name),
         BlockDestructibleByMining(seconds_to_destroy=0),
         BlockGeometry(blockbench="minecraft:geometry.cross"),
-        BlockMaterialInstance().add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                face=BlockFaceValues.All,
-                variations=[InstanceVariant(color=f"{wood}_sapling")],
-                params=MaterialParams(render_method=BlockMaterial.AlphaTestSingleSided),
-            )
+        BlockMaterialInstance().face(
+            BlockFaceValues.All,
+            BlockTexture(blockbench=MODEL, color=f"{wood}_sapling"),
+            render_method=BlockMaterial.AlphaTestSingleSided,
         ),
         BlockCollisionBox(enabled=False),
         BlockSelectionBox(origin=(-6, 0, -6), size=(12, 12, 12)),
@@ -109,7 +103,7 @@ def create(
     block.item.server.components.add(
         ItemBlockPlacer(block=block.identifier, replace_block_item=True),
         ItemDisplayName(value=display_name),
-        ItemIcon(textures=TextureComponents(color=f"{wood}_sapling")),
+        ItemIcon(color=f"{wood}_sapling"),
     )
     block.item.server.description.set_menu_category(
         ItemCategory.Nature, ItemGroups.Sapling

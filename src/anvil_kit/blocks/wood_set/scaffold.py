@@ -38,7 +38,11 @@ _used: set[str] = set()
 
 def constants_ts(namespace: str) -> str:
     """The `constants.ts` the scripts share: component ids, block states and helpers."""
-    return _CONSTANTS_TS_HEAD + f'export const NAMESPACE = "{namespace}";\n' + _CONSTANTS_TS_TAIL
+    return (
+        _CONSTANTS_TS_HEAD
+        + f'export const NAMESPACE = "{namespace}";\n'
+        + _CONSTANTS_TS_TAIL
+    )
 
 
 def script_ts(name: str) -> str:

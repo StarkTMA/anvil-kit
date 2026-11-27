@@ -26,7 +26,6 @@ from anvil.api.items.components import (
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.items.items import Item
 from anvil.api.logic.molang import Math, Molang, Query, Variable
-from anvil.api.pbr.texture_set import TextureComponents
 from anvil.lib.jsonmodel.enums import (
     DamageSensor,
     ItemCategory,
@@ -51,9 +50,7 @@ def create(wood: str, selected: set[str]) -> tuple[Entity, Item]:
     display_name = f"{wood.replace('_', ' ').title()} Boat"
 
     entity.client.description.add_geometry(BOAT_MODEL)
-    entity.client.description.add_texture(
-        blockbench=BOAT_MODEL, component=TextureComponents(color=f"{wood}_boat")
-    )
+    entity.client.description.add_texture(blockbench=BOAT_MODEL, color=f"{wood}_boat")
     entity.client.description.add_material("blend", "entity_alphablend")
     entity.client.description.add_material("alpha", "entity_alphatest")
     render = entity.client.description.render_controller("default")
@@ -134,7 +131,7 @@ def create(wood: str, selected: set[str]) -> tuple[Entity, Item]:
     item = Item(f"{wood}_boat")
     item.server.components.add(
         ItemDisplayName(value=display_name),
-        ItemIcon(textures=TextureComponents(color=f"{wood}_boat")),
+        ItemIcon(color=f"{wood}_boat"),
         ItemEntityPlacer(entity=entity),
         ItemLiquidClipped(),
         ItemMaxStackSize(value=1),

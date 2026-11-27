@@ -5,7 +5,6 @@ import shutil
 from pathlib import Path
 
 import click
-
 from anvil.api.items.crafting import CraftingItemCatalog
 from anvil.api.items.items import Item
 from anvil.lib.jsonmodel.enums import ItemCategory

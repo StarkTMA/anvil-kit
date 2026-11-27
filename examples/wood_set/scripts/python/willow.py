@@ -9,9 +9,12 @@ Textures: the `willow_*` textures in `assets/bbmodels/wood_set.bbmodel` and
 from anvil.api.core.filters import Filter
 from anvil.api.features import CoordinateRange, TreeFeature
 from anvil.api.features.feature_rule import FeatureRule
-from anvil.api.vanilla.biomes import MinecraftBiomeTags
-from anvil.api.vanilla.blocks import MinecraftBlockTypes
-from anvil.api.vanilla.items import MinecraftItemTypes
+from anvil.api.vanilla import (
+    MinecraftBiomeTags,
+    MinecraftBlockTypes,
+    MinecraftItemTypes,
+)
+
 from anvil_kit.blocks.wood_set import WoodSet
 
 STICK_CHANCE = 0.02

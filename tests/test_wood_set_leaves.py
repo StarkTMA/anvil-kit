@@ -11,7 +11,7 @@ from anvil.lib.lib import AnvilIO
 @pytest.fixture
 def make_leaves(monkeypatch):
     monkeypatch.setattr(
-        block_components.BlockMaterialInstance, "add_instance", lambda self, spec: self
+        block_components.BlockMaterialInstance, "face", lambda self, *args, **kwargs: self
     )
     return leaves.create
 

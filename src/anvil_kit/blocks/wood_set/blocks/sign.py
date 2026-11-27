@@ -20,10 +20,7 @@ from anvil.api.blocks.components import (
     BlockTagComponent,
     BlockTick,
     BlockTransformation,
-    InstanceSpec,
-    InstanceVariant,
     ItemTagFilter,
-    MaterialParams,
     NWayVisualRotation,
 )
 from anvil.api.core.core import CONFIG
@@ -36,9 +33,8 @@ from anvil.api.items.components import (
 )
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
-from anvil.api.pbr.texture_set import TextureComponents
-from anvil.api.vanilla.blocks import MinecraftBlockTags
-from anvil.api.vanilla.items import MinecraftItemTags, MinecraftItemTypes
+from anvil.api.textures import BlockTexture
+from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags, MinecraftItemTypes
 from anvil.api.world.loot_tables import LootTable
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -76,13 +72,10 @@ WALL_ROTATIONS = {
 
 
 def _material(wood: str, color: str) -> BlockMaterialInstance:
-    return BlockMaterialInstance().add_instance(
-        spec=InstanceSpec(
-            blockbench=MODEL,
-            face=BlockFaceValues.All,
-            variations=[InstanceVariant(color=color)],
-            params=MaterialParams(render_method=BlockMaterial.Opaque),
-        )
+    return BlockMaterialInstance().face(
+        BlockFaceValues.All,
+        BlockTexture(blockbench=MODEL, color=color),
+        render_method=BlockMaterial.Opaque,
     )
 
 
@@ -174,7 +167,7 @@ def create(
     block.item.server.components.add(
         ItemBlockPlacer(block=block.identifier, replace_block_item=True),
         ItemDisplayName(value=display_name),
-        ItemIcon(textures=TextureComponents(color=f"{wood}_sign")),
+        ItemIcon(color=f"{wood}_sign"),
         ItemFuel(duration=10),
         ItemMaxStackSize(value=16),
     )

@@ -12,7 +12,7 @@ except ImportError as error:
         "Install it with: pip install mcanvil-kit[ldtk]"
     ) from error
 
-from anvil.api.vanilla.blocks import MinecraftBlockTypes
+from anvil.api.vanilla import MinecraftBlockTypes
 from anvil.lib.config import CONFIG
 from anvil.lib.format_versions import MANIFEST_BUILD
 from anvil.lib.lib import Directory
