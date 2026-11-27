@@ -14,7 +14,6 @@ from anvil.api.actors.components import (
 )
 from anvil.api.actors.entity import Entity
 from anvil.api.logic.molang import Molang, Query
-from anvil.api.pbr.texture_set import TextureComponents
 
 if TYPE_CHECKING:
     from .potion import Potion

@@ -9,15 +9,13 @@ from anvil.api.blocks.components import (
     BlockMovable,
     BlockPlacementFilter,
     BlockSelectionBox,
-    InstanceSpec,
-    InstanceVariant,
 )
 from anvil.api.core.filters import Filter
 from anvil.api.features import CoordinateRange, FeatureRule, MultiBlockFeature
 from anvil.api.items.components import ItemBlockPlacer, ItemIcon
 from anvil.api.items.crafting.shaped import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
-from anvil.api.pbr.texture_set import TextureComponents
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBiomeTags, MinecraftItemTypes
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -39,8 +37,8 @@ class LampSwitch(BlockCustomComponent):
 
 
 def material(texture: str) -> BlockMaterialInstance:
-    return BlockMaterialInstance().add_instance(
-        spec=InstanceSpec(blockbench=MODEL, variations=[InstanceVariant(color=texture)])
+    return BlockMaterialInstance().face(
+        BlockFaceValues.All, BlockTexture(blockbench=MODEL, color=texture)
     )
 
 
@@ -88,7 +86,7 @@ def register_street_lamp() -> Block:
 
     block.item.server.description.set_menu_category(ItemCategory.Items)
     block.item.server.components.add(
-        ItemIcon(textures=TextureComponents(color="street_lamp")),
+        ItemIcon(color="street_lamp"),
         ItemBlockPlacer(block=block, replace_block_item=True),
     )
     block.queue()

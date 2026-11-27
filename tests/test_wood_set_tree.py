@@ -13,7 +13,7 @@ from anvil_kit.blocks.wood_set.components import BlockWoodSetSapling
 @pytest.fixture(autouse=True)
 def mock_material(monkeypatch):
     monkeypatch.setattr(
-        block_components.BlockMaterialInstance, "add_instance", lambda self, spec: self
+        block_components.BlockMaterialInstance, "face", lambda self, *args, **kwargs: self
     )
     monkeypatch.setattr(
         "anvil.api.textures.ItemTexturesObject.add_item",

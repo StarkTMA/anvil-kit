@@ -19,9 +19,6 @@ from anvil.api.blocks.components import (
     BlockRedstoneConductivity,
     BlockSelectionBox,
     BlockTagComponent,
-    InstanceSpec,
-    InstanceVariant,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.items.components import (
@@ -31,6 +28,7 @@ from anvil.api.items.components import (
     ItemTags,
 )
 from anvil.api.items.items import Item
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags
 from anvil.api.world.loot_tables import LootTable
 from anvil.lib.jsonmodel.enums import (
@@ -130,15 +128,10 @@ def create(
         BlockDisplayName(value=display_name),
         BlockDestructibleByMining(seconds_to_destroy=0.2),
         BlockGeometry(),
-        BlockMaterialInstance().add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                face=BlockFaceValues.All,
-                variations=[InstanceVariant(color=f"{wood}_leaves")],
-                params=MaterialParams(
-                    render_method=BlockMaterial.AlphaTestSingleSidedToOpaque
-                ),
-            )
+        BlockMaterialInstance().face(
+            BlockFaceValues.All,
+            BlockTexture(blockbench=MODEL, color=f"{wood}_leaves"),
+            render_method=BlockMaterial.AlphaTestSingleSidedToOpaque,
         ),
         BlockCollisionBox(origin=(-8, 0, -8), size=(16, 16, 16)),
         BlockSelectionBox(origin=(-8, 0, -8), size=(16, 16, 16)),

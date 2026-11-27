@@ -14,8 +14,8 @@ A **Stool**: a block that is not a full cube, with its model and texture coming 
 ```python
 block.server.components.add(
     BlockGeometry(blockbench="stool"),
-    BlockMaterialInstance().add_instance(
-        spec=InstanceSpec(blockbench="stool", variations=[InstanceVariant(color="stool")])
+    BlockMaterialInstance().face(
+        BlockFaceValues.All, BlockTexture(blockbench="stool", color="stool")
     ),
     BlockCollisionBox(origin=(-6, 0, -6), size=(12, 10, 12)),
     BlockSelectionBox(origin=(-6, 0, -6), size=(12, 10, 12)),

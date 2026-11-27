@@ -17,17 +17,15 @@ from anvil.api.blocks.components import (
     BlockSelectionBox,
     BlockTagComponent,
     BlockTransformation,
-    InstanceSpec,
-    InstanceVariant,
     ItemDisplayGuiTransform,
     ItemDisplayTransform,
     ItemTagFilter,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.items.components import ItemBlockPlacer, ItemDisplayName, ItemFuel
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags, MinecraftItemTypes
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -136,13 +134,10 @@ def create(
             fence_gate_closed=~Query.BlockState("open"),
             fence_gate_open=Query.BlockState("open"),
         ),
-        BlockMaterialInstance().add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                face=BlockFaceValues.All,
-                variations=[InstanceVariant(color=f"{wood}_planks")],
-                params=MaterialParams(render_method=BlockMaterial.Opaque),
-            )
+        BlockMaterialInstance().face(
+            BlockFaceValues.All,
+            BlockTexture(blockbench=MODEL, color=f"{wood}_planks"),
+            render_method=BlockMaterial.Opaque,
         ),
         BlockSelectionBox(origin=(-8, 0, -2), size=(16, 16, 4)),
         BlockMovable(movement_type="popped"),

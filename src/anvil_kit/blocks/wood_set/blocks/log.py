@@ -15,10 +15,7 @@ from anvil.api.blocks.components import (
     BlockSelectionBox,
     BlockTagComponent,
     BlockTransformation,
-    InstanceSpec,
-    InstanceVariant,
     ItemTagFilter,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.items.components import (
@@ -28,6 +25,7 @@ from anvil.api.items.components import (
     ItemTags,
 )
 from anvil.api.logic.molang import Query
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -96,13 +94,10 @@ def create(
         (BlockFaceValues.Up, f"{wood}_log_top"),
         (BlockFaceValues.Down, f"{wood}_log_top"),
     ):
-        materials.add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                face=face,
-                variations=[InstanceVariant(color=texture)],
-                params=MaterialParams(render_method=BlockMaterial.Opaque),
-            )
+        materials.face(
+            face,
+            BlockTexture(blockbench=MODEL, color=texture),
+            render_method=BlockMaterial.Opaque,
         )
 
     block.server.components.add(

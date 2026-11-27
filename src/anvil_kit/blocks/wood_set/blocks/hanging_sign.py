@@ -19,10 +19,7 @@ from anvil.api.blocks.components import (
     BlockTagComponent,
     BlockTick,
     BlockTransformation,
-    InstanceSpec,
-    InstanceVariant,
     ItemTagFilter,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.items.components import (
@@ -34,7 +31,7 @@ from anvil.api.items.components import (
 )
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
-from anvil.api.pbr.texture_set import TextureComponents
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags, MinecraftItemTypes
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -133,13 +130,10 @@ def create(
             blockbench=MODEL,
             collection="hanging_sign",
         ).add_bone_visibility(**{SIDE_BONE: ~hung_under, BOTTOM_BONE: hung_under}),
-        BlockMaterialInstance().add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                face=BlockFaceValues.All,
-                variations=[InstanceVariant(color=f"{wood}_hanging_sign")],
-                params=MaterialParams(render_method=BlockMaterial.AlphaTest),
-            )
+        BlockMaterialInstance().face(
+            BlockFaceValues.All,
+            BlockTexture(blockbench=MODEL, color=f"{wood}_hanging_sign"),
+            render_method=BlockMaterial.AlphaTest,
         ),
         BlockCollisionBox(enabled=False),
         BlockMovable(movement_type="popped"),
@@ -175,7 +169,7 @@ def create(
     block.item.server.components.add(
         ItemBlockPlacer(block=block.identifier, replace_block_item=True),
         ItemDisplayName(value=display_name),
-        ItemIcon(textures=TextureComponents(color=f"{wood}_hanging_sign")),
+        ItemIcon(color=f"{wood}_hanging_sign"),
         ItemFuel(duration=10),
         ItemMaxStackSize(value=16),
     )

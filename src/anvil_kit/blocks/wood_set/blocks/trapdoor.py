@@ -18,17 +18,15 @@ from anvil.api.blocks.components import (
     BlockSelectionBox,
     BlockTagComponent,
     BlockTransformation,
-    InstanceSpec,
-    InstanceVariant,
     ItemDisplayGuiTransform,
     ItemDisplayTransform,
     ItemTagFilter,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.items.components import ItemBlockPlacer, ItemDisplayName, ItemFuel
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -150,13 +148,10 @@ def create(
             trapdoor_closed=~Query.BlockState("open"),
             trapdoor_open=Query.BlockState("open"),
         ),
-        BlockMaterialInstance().add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                face=BlockFaceValues.All,
-                variations=[InstanceVariant(color=f"{wood}_trapdoor")],
-                params=MaterialParams(render_method=BlockMaterial.AlphaTestSingleSided),
-            )
+        BlockMaterialInstance().face(
+            BlockFaceValues.All,
+            BlockTexture(blockbench=MODEL, color=f"{wood}_trapdoor"),
+            render_method=BlockMaterial.AlphaTestSingleSided,
         ),
         BlockMovable(movement_type="popped"),
         BlockFlammable(),

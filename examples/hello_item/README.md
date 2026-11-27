@@ -14,7 +14,7 @@ The smallest Anvil project: one custom item, the **Ruby**, with a texture, a nam
 ```python
 item = Item("ruby")
 item.server.components.add(
-    ItemIcon(textures=TextureComponents(color="ruby")),
+    ItemIcon(color="ruby"),
     ItemDisplayName(value="Ruby"),
     ItemMaxStackSize(value=64),
 )

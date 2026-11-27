@@ -20,17 +20,15 @@ from anvil.api.blocks.components import (
     BlockTagComponent,
     BlockTick,
     BlockTransformation,
-    InstanceSpec,
-    InstanceVariant,
     ItemDisplayGuiTransform,
     ItemDisplayTransform,
     ItemTagFilter,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.items.components import ItemBlockPlacer, ItemDisplayName, ItemFuel
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -126,13 +124,10 @@ def create(
         BlockDisplayName(value=display_name),
         mining,
         geometry,
-        BlockMaterialInstance().add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                face=BlockFaceValues.All,
-                variations=[InstanceVariant(color=f"{wood}_planks")],
-                params=MaterialParams(render_method=BlockMaterial.Opaque),
-            )
+        BlockMaterialInstance().face(
+            BlockFaceValues.All,
+            BlockTexture(blockbench=MODEL, color=f"{wood}_planks"),
+            render_method=BlockMaterial.Opaque,
         ),
         BlockCollisionBox(origin=(-7, 0, -7), size=(14, 3.3, 14)),
         BlockSelectionBox(origin=(-7, 0, -7), size=(14, 1, 14)),

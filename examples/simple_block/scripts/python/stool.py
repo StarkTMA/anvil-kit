@@ -5,12 +5,11 @@ from anvil.api.blocks.components import (
     BlockGeometry,
     BlockMaterialInstance,
     BlockSelectionBox,
-    InstanceSpec,
-    InstanceVariant,
 )
 from anvil.api.items.crafting.shaped import ShapedCraftingRecipe
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftItemTypes
-from anvil.lib.jsonmodel.enums import BlockSoundGroup, ItemCategory
+from anvil.lib.jsonmodel.enums import BlockFaceValues, BlockSoundGroup, ItemCategory
 
 MODEL = "stool"
 
@@ -21,11 +20,8 @@ def register_stool() -> Block:
 
     block.server.components.add(
         BlockGeometry(blockbench=MODEL),
-        BlockMaterialInstance().add_instance(
-            spec=InstanceSpec(
-                blockbench=MODEL,
-                variations=[InstanceVariant(color="stool")],
-            )
+        BlockMaterialInstance().face(
+            BlockFaceValues.All, BlockTexture(blockbench=MODEL, color="stool")
         ),
         BlockCollisionBox(origin=(-6, 0, -6), size=(12, 10, 12)),
         BlockSelectionBox(origin=(-6, 0, -6), size=(12, 10, 12)),

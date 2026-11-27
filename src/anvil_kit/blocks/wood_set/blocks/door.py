@@ -1,4 +1,4 @@
-from anvil.api.blocks.blocks import Block, TextureComponents
+from anvil.api.blocks.blocks import Block
 from anvil.api.blocks.components import (
     BlockCollisionBox,
     BlockConnectionRule,
@@ -19,10 +19,7 @@ from anvil.api.blocks.components import (
     BlockSelectionBox,
     BlockTagComponent,
     BlockTransformation,
-    InstanceSpec,
-    InstanceVariant,
     ItemTagFilter,
-    MaterialParams,
 )
 from anvil.api.core.core import CONFIG
 from anvil.api.items.components import (
@@ -33,6 +30,7 @@ from anvil.api.items.components import (
 )
 from anvil.api.items.crafting import ShapedCraftingRecipe
 from anvil.api.logic.molang import Query
+from anvil.api.textures import BlockTexture
 from anvil.api.vanilla import MinecraftBlockTags, MinecraftItemTags
 from anvil.lib.jsonmodel.enums import (
     BlockFaceValues,
@@ -89,13 +87,10 @@ CLOSED_SIDES = {
 
 
 def _material(wood: str, texture: str) -> BlockMaterialInstance:
-    return BlockMaterialInstance().add_instance(
-        spec=InstanceSpec(
-            blockbench=MODEL,
-            face=BlockFaceValues.All,
-            variations=[InstanceVariant(color=texture)],
-            params=MaterialParams(render_method=BlockMaterial.AlphaTestSingleSided),
-        )
+    return BlockMaterialInstance().face(
+        BlockFaceValues.All,
+        BlockTexture(blockbench=MODEL, color=texture),
+        render_method=BlockMaterial.AlphaTestSingleSided,
     )
 
 
@@ -215,7 +210,7 @@ def create(
         ItemBlockPlacer(block=block.identifier, replace_block_item=True),
         ItemDisplayName(value=display_name),
         ItemFuel(duration=10),
-        ItemIcon(textures=TextureComponents(color=f"{wood}_door")),
+        ItemIcon(color=f"{wood}_door"),
     )
     block.item.server.description.set_menu_category(
         ItemCategory.Construction, ItemGroups.Door
