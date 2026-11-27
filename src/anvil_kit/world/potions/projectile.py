@@ -13,7 +13,7 @@ from anvil.api.actors.components import (
     EntityPushableByEntity,
 )
 from anvil.api.actors.entity import Entity
-from anvil.api.logic.molang import Query
+from anvil.api.logic.molang import Molang, Query
 from anvil.api.pbr.texture_set import TextureComponents
 
 if TYPE_CHECKING:
@@ -75,12 +75,11 @@ def add_render_controller(
     """Draw `potion`'s textures on the projectile while it carries `potion.effect_id`."""
     for texture in textures:
         projectile.client.description.add_texture(
-            "potion_model", TextureComponents(color=texture)
+            blockbench="potion_model", color=texture
         )
 
     rc = projectile.client.description.render_controller(
-        potion.key, Query.Property("effect_id") == potion.effect_id
+        f"potion_{potion.key}", Query.Property("effect_id") == potion.effect_id
     )
     rc.set_geometry("potion_model")
-    rc.texture_array("potions", textures)
-    rc.add_texture(f'Array.potions[{Query.Property("type")}]')
+    rc.texture_array(f"potion_{potion.key}", textures, Query.Property("type"))

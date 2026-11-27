@@ -18,7 +18,6 @@ from anvil.api.items.components import (
     ItemUseModifiers,
 )
 from anvil.api.items.items import Item
-from anvil.api.pbr.texture_set import TextureComponents
 from anvil.api.vanilla import MinecraftItemTypes
 from anvil.lib.jsonmodel import InRange, json_field
 from anvil.lib.jsonmodel.component import JsonCustomComponent
@@ -94,10 +93,8 @@ class PotionVariant:
         item.server.components.add(
             ItemDisplayName(value=f"{title}\\n{subtitle}"),
             ItemIcon(
-                textures=TextureComponents(
-                    color=f"{potion.key}_{self.potion_type}_potion"
-                ),
                 blockbench="potion_model",
+                color=f"{potion.key}_{self.potion_type}_potion",
             ),
             ItemMaxStackSize(value=1),
             ItemStackedByData(value=False),
